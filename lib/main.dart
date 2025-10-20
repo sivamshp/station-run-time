@@ -43,8 +43,7 @@ class _StationHomePageState extends State<StationHomePage> {
   }
 
   /// Shows a custom dialog for simple time input (hhmm format).
-  Future<TimeOfDay?> _showSimpleTimeInputDialog(
-      BuildContext context, String title) async {
+  Future<TimeOfDay?> _showSimpleTimeInputDialog(BuildContext context, String title) async {
     return showDialog<TimeOfDay>(
       context: context,
       builder: (BuildContext context) {
@@ -54,12 +53,10 @@ class _StationHomePageState extends State<StationHomePage> {
   }
 
   void addInterval(String unit) async {
-    final TimeOfDay? on =
-        await _showSimpleTimeInputDialog(context, 'Enter ON Time (hhmm)');
+    final TimeOfDay? on = await _showSimpleTimeInputDialog(context, 'Enter ON Time (hhmm)');
     if (on == null) return; // canceled
 
-    final TimeOfDay? off =
-        await _showSimpleTimeInputDialog(context, 'Enter OFF Time (hhmm)');
+    final TimeOfDay? off = await _showSimpleTimeInputDialog(context, 'Enter OFF Time (hhmm)');
     if (off == null) return; // canceled
 
     setState(() {
@@ -75,10 +72,8 @@ class _StationHomePageState extends State<StationHomePage> {
 
   Duration _durationForInterval(Interval iv) {
     final DateTime now = DateTime.now();
-    DateTime onDT =
-        DateTime(now.year, now.month, now.day, iv.on.hour, iv.on.minute);
-    DateTime offDT =
-        DateTime(now.year, now.month, now.day, iv.off.hour, iv.off.minute);
+    DateTime onDT = DateTime(now.year, now.month, now.day, iv.on.hour, iv.on.minute);
+    DateTime offDT = DateTime(now.year, now.month, now.day, iv.off.hour, iv.off.minute);
     if (offDT.isBefore(onDT) || offDT.isAtSameMomentAs(onDT)) {
       // treat as next day
       offDT = offDT.add(const Duration(days: 1));
@@ -120,10 +115,8 @@ class _StationHomePageState extends State<StationHomePage> {
     final List<_DateInterval> all = <_DateInterval>[];
     for (final List<Interval> list in unitsData.values) {
       for (final Interval iv in list) {
-        DateTime onDT =
-            DateTime(now.year, now.month, now.day, iv.on.hour, iv.on.minute);
-        DateTime offDT =
-            DateTime(now.year, now.month, now.day, iv.off.hour, iv.off.minute);
+        DateTime onDT = DateTime(now.year, now.month, now.day, iv.on.hour, iv.on.minute);
+        DateTime offDT = DateTime(now.year, now.month, now.day, iv.off.hour, iv.off.minute);
         if (offDT.isBefore(onDT) || offDT.isAtSameMomentAs(onDT)) {
           offDT = offDT.add(const Duration(days: 1));
         }
@@ -143,8 +136,7 @@ class _StationHomePageState extends State<StationHomePage> {
       final _DateInterval last = merged.last;
       if (!current.start.isAfter(last.end)) {
         // overlap
-        final DateTime newEnd =
-            current.end.isAfter(last.end) ? current.end : last.end;
+        final DateTime newEnd = current.end.isAfter(last.end) ? current.end : last.end;
         merged[merged.length - 1] = _DateInterval(last.start, newEnd);
       } else {
         merged.add(current);
@@ -154,8 +146,7 @@ class _StationHomePageState extends State<StationHomePage> {
   }
 
   // Helper to calculate total minutes from a list of _DateIntervals
-  double _calculateTotalMinutesFromDateIntervals(
-      List<_DateInterval> intervals) {
+  double _calculateTotalMinutesFromDateIntervals(List<_DateInterval> intervals) {
     double totalMinutes = 0;
     for (final _DateInterval m in intervals) {
       totalMinutes += m.end.difference(m.start).inMinutes.toDouble();
@@ -180,10 +171,8 @@ class _StationHomePageState extends State<StationHomePage> {
   Widget build(BuildContext context) {
     final Map<String, double> perUnitMins = calculatePerUnitMinutes();
     final double totalCombined = calculateTotalCombinedMinutes(perUnitMins);
-    final List<_DateInterval> stationMergedIntervals =
-        _getStationMergedIntervals();
-    final double stationMinutes =
-        _calculateTotalMinutesFromDateIntervals(stationMergedIntervals);
+    final List<_DateInterval> stationMergedIntervals = _getStationMergedIntervals();
+    final double stationMinutes = _calculateTotalMinutesFromDateIntervals(stationMergedIntervals);
 
     return Scaffold(
       appBar: AppBar(
@@ -197,12 +186,9 @@ class _StationHomePageState extends State<StationHomePage> {
                 context: context,
                 builder: (BuildContext _) => AlertDialog(
                   title: const Text('Clear all intervals?'),
-                  content: const Text(
-                      'This will remove all entered ON/OFF intervals.'),
+                  content: const Text('This will remove all entered ON/OFF intervals.'),
                   actions: <Widget>[
-                    TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Cancel')),
+                    TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
                     TextButton(
                         onPressed: () {
                           clearAll();
@@ -221,9 +207,7 @@ class _StationHomePageState extends State<StationHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const Text(
-                'Enter ON/OFF times for each unit (24-hour hhmm format):',
-                style: TextStyle(fontSize: 16)),
+            const Text('Enter ON/OFF times for each unit (24-hour hhmm format):', style: TextStyle(fontSize: 16)),
             const SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
@@ -242,10 +226,7 @@ class _StationHomePageState extends State<StationHomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(unit,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
+                              Text(unit, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                               ElevatedButton.icon(
                                 icon: const Icon(Icons.add),
                                 label: const Text('Add Interval'),
@@ -255,30 +236,23 @@ class _StationHomePageState extends State<StationHomePage> {
                           ),
                           const SizedBox(height: 8),
                           intervals.isEmpty
-                              ? const Text('No intervals entered',
-                                  style: TextStyle(color: Colors.grey))
+                              ? const Text('No intervals entered', style: TextStyle(color: Colors.grey))
                               : Column(
                                   children: <Widget>[
                                     ListView.builder(
                                       shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
+                                      physics: const NeverScrollableScrollPhysics(),
                                       itemCount: intervals.length,
                                       itemBuilder: (BuildContext c, int i) {
                                         final Interval iv = intervals[i];
-                                        final Duration dur =
-                                            _durationForInterval(iv);
+                                        final Duration dur = _durationForInterval(iv);
                                         return ListTile(
                                           contentPadding: EdgeInsets.zero,
-                                          title: Text(
-                                              '${timeOfDayToString(iv.on)}  →  ${timeOfDayToString(iv.off)}'),
-                                          subtitle: Text(
-                                              '${dur.inHours}h ${dur.inMinutes % 60}m'),
+                                          title: Text('${timeOfDayToString(iv.on)}  →  ${timeOfDayToString(iv.off)}'),
+                                          subtitle: Text('${dur.inHours}h ${dur.inMinutes % 60}m'),
                                           trailing: IconButton(
-                                            icon: const Icon(
-                                                Icons.delete_outline),
-                                            onPressed: () =>
-                                                removeInterval(unit, i),
+                                            icon: const Icon(Icons.delete_outline),
+                                            onPressed: () => removeInterval(unit, i),
                                           ),
                                         );
                                       },
@@ -286,8 +260,7 @@ class _StationHomePageState extends State<StationHomePage> {
                                   ],
                                 ),
                           const SizedBox(height: 6),
-                          Text(
-                              'Total for $unit: ${formatDurationMinutes(perUnitMins[unit] ?? 0)}'),
+                          Text('Total for $unit: ${formatDurationMinutes(perUnitMins[unit] ?? 0)}'),
                         ],
                       ),
                     ),
@@ -303,52 +276,31 @@ class _StationHomePageState extends State<StationHomePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    const Text('Results',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const Text('Results', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
-                    Text(
-                        'Total combined run time (sum of all units): ${formatDurationMinutes(totalCombined)}'),
+                    Text('Total combined run time (sum of all units): ${formatDurationMinutes(totalCombined)}'),
                     const SizedBox(height: 6),
-                    Text(
-                        'Station run time (merged across units): ${formatDurationMinutes(stationMinutes)}'),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Card(
-              elevation: 3,
-              margin: const EdgeInsets.symmetric(vertical: 8),
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text('Station Merged Intervals',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    if (stationMergedIntervals.isEmpty)
-                      const Text('No merged intervals to display',
-                          style: TextStyle(color: Colors.grey))
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: stationMergedIntervals.length,
-                        itemBuilder: (BuildContext c, int i) {
-                          final _DateInterval iv = stationMergedIntervals[i];
-                          final Duration dur = iv.end.difference(iv.start);
-                          return ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            title: Text(
-                                '${DateFormat.Hm().format(iv.start)}  →  ${DateFormat.Hm().format(iv.end)}'),
-                            subtitle:
-                                Text('${dur.inHours}h ${dur.inMinutes % 60}m'),
+                    Text('Station run time (merged across units): ${formatDurationMinutes(stationMinutes)}'),
+                    const SizedBox(height: 12),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.timeline),
+                        label: const Text('View Merged Intervals'),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(
+                              builder: (BuildContext ctx) => StationMergedIntervalsPage(
+                                mergedIntervals: stationMergedIntervals,
+                                totalMergedMinutes: stationMinutes,
+                                formatDurationMinutes: formatDurationMinutes,
+                              ),
+                            ),
                           );
                         },
                       ),
+                    ),
                   ],
                 ),
               ),
@@ -379,8 +331,7 @@ class _DateInterval {
 class SimpleTimeInputDialog extends StatefulWidget {
   final String title;
 
-  const SimpleTimeInputDialog({Key? key, required this.title})
-      : super(key: key);
+  const SimpleTimeInputDialog({Key? key, required this.title}) : super(key: key);
 
   @override
   State<SimpleTimeInputDialog> createState() => _SimpleTimeInputDialogState();
@@ -411,15 +362,9 @@ class _SimpleTimeInputDialogState extends State<SimpleTimeInputDialog> {
     final int? hour = int.tryParse(hourStr);
     final int? minute = int.tryParse(minuteStr);
 
-    if (hour == null ||
-        minute == null ||
-        hour < 0 ||
-        hour > 23 ||
-        minute < 0 ||
-        minute > 59) {
+    if (hour == null || minute == null || hour < 0 || hour > 23 || minute < 0 || minute > 59) {
       setState(() {
-        _errorText =
-            'Invalid time. Use hhmm format (00-23 for hours, 00-59 for minutes).';
+        _errorText = 'Invalid time. Use hhmm format (00-23 for hours, 00-59 for minutes).';
       });
       return;
     }
@@ -444,8 +389,7 @@ class _SimpleTimeInputDialogState extends State<SimpleTimeInputDialog> {
           counterText: "", // Hide the default character counter
         ),
         autofocus: true,
-        onSubmitted: (String _) =>
-            _validateAndSubmit(), // Allows submitting with enter key
+        onSubmitted: (String _) => _validateAndSubmit(), // Allows submitting with enter key
       ),
       actions: <Widget>[
         TextButton(
@@ -457,6 +401,81 @@ class _SimpleTimeInputDialogState extends State<SimpleTimeInputDialog> {
           child: const Text('OK'),
         ),
       ],
+    );
+  }
+}
+
+/// A new widget to display the station's merged intervals on a separate page.
+class StationMergedIntervalsPage extends StatelessWidget {
+  final List<_DateInterval> mergedIntervals;
+  final double totalMergedMinutes;
+  final String Function(double) formatDurationMinutes; // Function to format durations
+
+  const StationMergedIntervalsPage({
+    Key? key,
+    required this.mergedIntervals,
+    required this.totalMergedMinutes,
+    required this.formatDurationMinutes,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Station Merged Intervals'),
+        // A back button is automatically provided by MaterialApp when pushing a new route
+        // when the previous route is available in the navigator stack.
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Card(
+              color: Colors.grey.shade100,
+              child: Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Text('Total Station Run Time', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text(
+                      formatDurationMinutes(totalMergedMinutes),
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text('Merged Intervals Details:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Expanded(
+              child: mergedIntervals.isEmpty
+                  ? const Center(child: Text('No merged intervals to display', style: TextStyle(color: Colors.grey, fontSize: 16)))
+                  : ListView.builder(
+                      itemCount: mergedIntervals.length,
+                      itemBuilder: (BuildContext c, int i) {
+                        final _DateInterval iv = mergedIntervals[i];
+                        final Duration dur = iv.end.difference(iv.start);
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            title: Text(
+                              '${DateFormat.Hm().format(iv.start)}  →  ${DateFormat.Hm().format(iv.end)}',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            subtitle: Text('${dur.inHours}h ${dur.inMinutes % 60}m'),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
